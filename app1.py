@@ -430,42 +430,72 @@ if predict_button:
     }])
 
 
-
-    if predict_button:
-        input_data = pd.DataFrame([{
-        "state": selected_state,
-        "Location": selected_location,
-        "Carpet Area": carpet_area,
-        "Transaction": transaction,
-        "Furnishing": furnishing,
-        "Bathroom": bathroom,
-        "Balcony": balcony,
-        "BHK": bhk,
-        "FlatFloor": flat_floor,
-        "TotalFloors": total_floors,
-        "ParkingNumbers": parking_numbers,
-        "Parking Type": parking_type
-    }])
+    # Predict
 
     prediction = model.predict(input_data)[0]
 
+
+    # Prevent negative prediction
+
     if prediction < 0:
+
         prediction = 0.01
 
+
+    # =====================================================
+    # DISPLAY RESULT
+    # =====================================================
+
     if prediction < 1:
+
         price = prediction * 100
-        price_text = f"₹ {price:.2f} Lakhs"
+
+        st.markdown(f"""
+        <div class="result-container">
+
+            <div class="result-title">
+                🏠 Estimated House Price
+            </div>
+
+            <div class="result-price">
+                ₹ {price:.2f} Lakhs
+            </div>
+
+            <div class="result-text">
+                Estimated price based on the selected property details
+            </div>
+
+        </div>
+        """, unsafe_allow_html=True)
+
+
     else:
-        price_text = f"₹ {prediction:.2f} Crores"
 
-    st.markdown("---")
+        st.markdown(f"""
+        <div class="result-container">
 
-    st.markdown(
-        "<h3 style='text-align:center;'>🏠 Estimated House Price</h3>",
-        unsafe_allow_html=True
-    )
+            <div class="result-title">
+                🏠 Estimated House Price
+            </div>
 
-    st.markdown(
-        f"<h1 style='text-align:center;'>{price_text}</h1>",
-        unsafe_allow_html=True
-    )
+            <div class="result-price">
+                ₹ {prediction:.2f} Crores
+            </div>
+
+            <div class="result-text">
+                Estimated price based on the selected property details
+            </div>
+
+        </div>
+        """, unsafe_allow_html=True)
+
+
+# =========================================================
+# FOOTER
+# =========================================================
+
+st.markdown("""
+<div class="footer">
+    House Price Prediction | Machine Learning Project
+</div>
+""", unsafe_allow_html=True)
