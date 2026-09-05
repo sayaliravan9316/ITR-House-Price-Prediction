@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import pickle
 
+
 # =========================================================
 # PAGE CONFIG
 # =========================================================
@@ -12,244 +13,222 @@ st.set_page_config(
     layout="wide"
 )
 
+
 # =========================================================
-# CUSTOM DESIGN / CSS
+# ATTRACTIVE DESIGN
 # =========================================================
 
 st.markdown("""
 <style>
 
-/* ===============================
-   MAIN BACKGROUND
-   =============================== */
-
 .stApp {
-    background: linear-gradient(
-        135deg,
-        #f6f1e9 0%,
-        #e8f0e8 45%,
-        #dce8f5 100%
-    );
+    background:
+        radial-gradient(
+            circle at 5% 5%,
+            rgba(255,255,255,0.95),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 95% 90%,
+            rgba(191,219,254,0.65),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #eef5ff 0%,
+            #f8f4ff 48%,
+            #eefaf6 100%
+        );
 }
 
 
-/* ===============================
-   MAIN CONTENT
-   =============================== */
-
-.block-container {
-    padding-top: 2rem;
-    padding-bottom: 3rem;
-    max-width: 1250px;
-}
-
-
-/* ===============================
-   MAIN TITLE
-   =============================== */
-
+/* Main Title */
 .main-title {
     text-align: center;
-    font-size: 52px;
-    font-weight: 900;
-    margin-bottom: 8px;
-    letter-spacing: 1px;
+    font-size: 46px;
+    font-weight: 800;
+    color: #172554;
+    margin-top: 10px;
+    margin-bottom: 5px;
 }
 
 
-/* ===============================
-   SUBTITLE
-   =============================== */
-
+/* Subtitle */
 .subtitle {
     text-align: center;
-    font-size: 21px;
-    font-weight: 500;
-    margin-bottom: 35px;
+    font-size: 18px;
+    color: #64748b;
+    margin-bottom: 30px;
 }
 
 
-/* ===============================
-   SECTION HEADINGS
-   =============================== */
-
-h1 {
-    font-size: 36px !important;
-    font-weight: 800 !important;
-}
-
-h2 {
-    font-size: 30px !important;
-    font-weight: 800 !important;
-}
-
-h3 {
-    font-size: 25px !important;
+/* Section headings */
+h2, h3 {
+    color: #1e3a8a !important;
     font-weight: 750 !important;
 }
 
 
-/* ===============================
-   LABELS
-   =============================== */
-
+/* Labels */
 label {
-    font-size: 18px !important;
-    font-weight: 700 !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #334155 !important;
 }
 
 
-/* ===============================
-   INPUT BOXES
-   =============================== */
-
+/* Select boxes and number inputs */
 .stSelectbox > div > div,
-.stNumberInput > div > div {
-    min-height: 50px;
-    border-radius: 12px;
-    font-size: 17px;
-}
-
-
-/* Input text */
-
-.stSelectbox div,
 .stNumberInput input {
-    font-size: 17px !important;
+
+    border-radius: 12px !important;
+    border: 1px solid #cbd5e1 !important;
+
+    min-height: 48px;
+
+    font-size: 16px !important;
+
+    background: rgba(255,255,255,0.90) !important;
 }
 
 
-/* ===============================
-   BUTTON
-   =============================== */
+/* Input Hover */
+.stSelectbox > div > div:hover,
+.stNumberInput input:hover {
 
+    border-color: #6366f1 !important;
+}
+
+
+/* Predict Button */
 .stButton > button {
+
     width: 100%;
-    height: 62px;
+
+    height: 58px;
+
     border-radius: 15px;
-    font-size: 23px !important;
-    font-weight: 800 !important;
+
     border: none;
+
+    font-size: 20px;
+
+    font-weight: 750;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            90deg,
+            #4f46e5,
+            #7c3aed
+        );
+
+    box-shadow:
+        0 8px 20px rgba(79,70,229,0.25);
+
     transition: 0.3s;
 }
 
+
+/* Button Hover */
 .stButton > button:hover {
-    transform: scale(1.02);
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 25px rgba(79,70,229,0.35);
 }
 
 
-/* ===============================
-   PREDICTION METRIC
-   =============================== */
-
+/* Prediction Result */
 [data-testid="stMetric"] {
+
+    background: rgba(255,255,255,0.92);
+
     padding: 25px;
+
     border-radius: 18px;
-    border: 1px solid rgba(0,0,0,0.08);
-    background: rgba(255,255,255,0.75);
+
+    border: 1px solid #e2e8f0;
+
+    box-shadow:
+        0 8px 25px rgba(15,23,42,0.08);
 }
 
 
-/* Metric label */
-
+/* Metric Label */
 [data-testid="stMetricLabel"] {
-    font-size: 20px !important;
-    font-weight: 700 !important;
-}
 
-
-/* Metric value */
-
-[data-testid="stMetricValue"] {
-    font-size: 44px !important;
-    font-weight: 900 !important;
-}
-
-
-/* ===============================
-   SUCCESS MESSAGE
-   =============================== */
-
-.stAlert {
     font-size: 17px !important;
-    border-radius: 12px;
+
 }
 
 
-/* ===============================
-   DIVIDER
-   =============================== */
+/* Metric Value */
+[data-testid="stMetricValue"] {
 
+    font-size: 36px !important;
+
+    font-weight: 800 !important;
+
+}
+
+
+/* Divider */
 hr {
-    margin-top: 25px;
-    margin-bottom: 25px;
+
+    border: none;
+
+    height: 1px;
+
+    background: #cbd5e1;
+
+    margin: 25px 0;
+
 }
 
 
-/* ===============================
-   FOOTER
-   =============================== */
-
+/* Footer */
 .footer {
+
     text-align: center;
-    font-size: 16px;
-    font-weight: 600;
-    margin-top: 25px;
+
+    color: #64748b;
+
+    font-size: 14px;
+
+    margin-top: 35px;
+
 }
 
 </style>
 """, unsafe_allow_html=True)
 
 
-# =========================================================
 # TITLE
-# =========================================================
+
 
 st.markdown(
     '<div class="main-title">🏠 House Price Prediction</div>',
     unsafe_allow_html=True
 )
 
-st.markdown(
-    '<div class="subtitle">Predict the estimated price of a house using property details</div>',
-    unsafe_allow_html=True
-)
 
 
-# =========================================================
-# LOAD DATASET
-# =========================================================
+# LOAD DATA AND MODEL
 
-try:
+df = pd.read_csv("cleaned-home-data.csv")
 
-    df = pd.read_csv("cleaned-home-data.csv")
-
-except FileNotFoundError:
-
-    st.error("❌ cleaned-home-data.csv file not found.")
-    st.stop()
-
-
-# =========================================================
-# LOAD MODEL
-# =========================================================
-
-try:
-
-    with open("pipe.pkl", "rb") as file:
-        model = pickle.load(file)
-
-except FileNotFoundError:
-
-    st.error("❌ pipe.pkl file not found.")
-    st.stop()
+with open("pipe.pkl", "rb") as file:
+    model = pickle.load(file)
 
 
 # =========================================================
 # LOCATION DETAILS
 # =========================================================
 
-st.header("📍 Location Details")
+st.subheader("📍 Location Details")
 
 col1, col2 = st.columns(2)
 
@@ -272,18 +251,18 @@ with col1:
 with col2:
 
     location_data = (
-        df[df["state"].astype(str) == selected_state]["Location"]
+        df[
+            df["state"].astype(str) == selected_state
+        ]["Location"]
         .dropna()
         .astype(str)
         .unique()
         .tolist()
     )
 
-    location_data = sorted(location_data)
-
     selected_location = st.selectbox(
         "Location",
-        location_data
+        sorted(location_data)
     )
 
 
@@ -291,7 +270,9 @@ with col2:
 # PROPERTY DETAILS
 # =========================================================
 
-st.header("🏡 Property Details")
+st.divider()
+
+st.subheader("🏡 Property Details")
 
 col1, col2, col3 = st.columns(3)
 
@@ -301,144 +282,108 @@ with col1:
         "Carpet Area (sqft)",
         min_value=1.0,
         value=500.0,
-        step=10.0
+        step=100.0
     )
-
-
-with col2:
 
     bhk = st.number_input(
         "BHK",
         min_value=1,
-        max_value=20,
         value=2,
         step=1
     )
-
-
-with col3:
 
     bathroom = st.number_input(
         "Bathroom",
         min_value=1,
-        max_value=20,
         value=2,
-        step=1
-    )
-
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-
-    balcony = st.number_input(
-        "Balcony",
-        min_value=0,
-        max_value=10,
-        value=1,
         step=1
     )
 
 
 with col2:
 
-    flat_floor = st.number_input(
-        "Flat Floor",
+    balcony = st.number_input(
+        "Balcony",
         min_value=0,
-        max_value=100,
         value=1,
         step=1
     )
 
-
-with col3:
+    flat_floor = st.number_input(
+        "Flat Floor",
+        min_value=0,
+        value=1,
+        step=1
+    )
 
     total_floors = st.number_input(
         "Total Floors",
         min_value=1,
-        max_value=100,
         value=5,
         step=1
     )
 
 
-# =========================================================
-# ADDITIONAL DETAILS
-# =========================================================
-
-st.header("🔑 Additional Details")
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
+with col3:
 
     parking_numbers = st.number_input(
         "Parking Numbers",
         min_value=0,
-        max_value=20,
-        value=0,
+        value=1,
         step=1
     )
 
-
-with col2:
-
-    parking_types = sorted(
-        df["Parking Type"]
-        .dropna()
-        .astype(str)
-        .unique()
-        .tolist()
-    )
-
-    selected_parking = st.selectbox(
+    parking_type = st.selectbox(
         "Parking Type",
-        parking_types
+        sorted(
+            df["Parking Type"]
+            .dropna()
+            .astype(str)
+            .unique()
+            .tolist()
+        )
     )
 
-
-with col3:
-
-    furnishing_types = sorted(
-        df["Furnishing"]
-        .dropna()
-        .astype(str)
-        .unique()
-        .tolist()
-    )
-
-    selected_furnishing = st.selectbox(
+    furnishing = st.selectbox(
         "Furnishing",
-        furnishing_types
+        sorted(
+            df["Furnishing"]
+            .dropna()
+            .astype(str)
+            .unique()
+            .tolist()
+        )
     )
 
 
-col1, col2 = st.columns(2)
+# =========================================================
+# TRANSACTION DETAILS
+# =========================================================
 
-with col1:
+st.divider()
 
-    transaction_types = sorted(
+st.subheader("📋 Transaction Details")
+
+transaction = st.selectbox(
+    "Transaction Type",
+    sorted(
         df["Transaction"]
         .dropna()
         .astype(str)
         .unique()
         .tolist()
     )
-
-    selected_transaction = st.selectbox(
-        "Transaction Type",
-        transaction_types
-    )
+)
 
 
 # =========================================================
-# PREDICT BUTTON
+# PREDICTION BUTTON
 # =========================================================
 
-st.write("")
+st.divider()
 
 predict_button = st.button(
-    "🔮  Predict House Price"
+    "🔮 Predict House Price"
 )
 
 
@@ -456,9 +401,9 @@ if predict_button:
 
         "Carpet Area": carpet_area,
 
-        "Transaction": selected_transaction,
+        "Transaction": transaction,
 
-        "Furnishing": selected_furnishing,
+        "Furnishing": furnishing,
 
         "Bathroom": bathroom,
 
@@ -472,76 +417,57 @@ if predict_button:
 
         "ParkingNumbers": parking_numbers,
 
-        "Parking Type": selected_parking
+        "Parking Type": parking_type
 
     }])
 
 
-    try:
-
-        # Predict price
-
-        prediction = model.predict(input_data)[0]
+    prediction = model.predict(input_data)[0]
 
 
-        # Prevent negative prediction
-
-        if prediction < 0:
-
-            prediction = 0.01
+    # Prevent negative prediction
+    if prediction < 0:
+        prediction = 0.01
 
 
-        # =================================================
-        # CONVERT PRICE
-        # =================================================
+    # =====================================================
+    # PRICE CONVERSION
+    # =====================================================
 
-        if prediction < 1:
+    if prediction < 1:
 
-            price_in_lakhs = prediction * 100
+        price_in_lakhs = prediction * 100
 
-            price_text = f"₹ {price_in_lakhs:.2f} Lakhs"
-
-        else:
-
-            price_text = f"₹ {prediction:.2f} Crores"
-
-
-        # =================================================
-        # RESULT
-        # =================================================
-
-        st.divider()
-
-        st.subheader("🏠 Estimated House Price")
-
-        st.metric(
-            label="Predicted Price",
-            value=price_text
+        price_text = (
+            f"₹ {price_in_lakhs:.2f} Lakhs"
         )
 
-        st.success(
-            "✅ Estimated price based on the selected property details."
-        )
+    else:
 
-        # Celebration
-
-        st.balloons()
-
-
-    except Exception as e:
-
-        st.error(
-            f"❌ Prediction Error: {e}"
+        price_text = (
+            f"₹ {prediction:.2f} Crores"
         )
 
 
-# =========================================================
-# FOOTER
-# =========================================================
+    # =====================================================
+    # RESULT
+    # =====================================================
 
-st.divider()
+    st.divider()
 
-st.markdown(
-    '<div class="footer">🏠 House Price Prediction | Machine Learning Project</div>',
-    unsafe_allow_html=True
-)
+    st.subheader("🏠 Estimated House Price")
+
+    st.metric(
+        label="Predicted Price",
+        value=price_text
+    )
+
+    st.success(
+        "✨ Estimated price based on the selected property details."
+    )
+
+    st.balloons()
+
+
+
+    
